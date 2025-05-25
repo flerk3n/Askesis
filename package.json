@@ -1,0 +1,41 @@
+{
+  "name": "askesis",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "generate-sdk": "npx openapi-typescript-codegen --input https://api.sensay.io/schema --output src/sensay-sdk --name SensayAPI"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "next": "14.2.28",
+    "openapi-typescript-codegen": "^0.29.0",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-syntax-highlighter": "^15.6.1",
+    "firebase": "^10.8.0",
+    "firebase-admin": "^12.0.0",
+    "framer-motion": "^11.0.5",
+    "react-icons": "^5.0.1",
+    "@headlessui/react": "^1.7.18"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/react-syntax-highlighter": "^15.5.7",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "14.1.0",
+    "lru-cache": "^10.2.0",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3"
+  }
+}

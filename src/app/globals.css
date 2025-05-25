@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0f0e17;
+  --headline: #fffffe;
+  --paragraph: #a7a9be;
+  --button: #ff8906;
+  --button-text: #fffffe;
+}
+
+@layer base {
+  body {
+    @apply bg-[#0f0e17] text-[#fffffe];
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-6 py-2 rounded-lg font-medium transition-colors duration-200;
+  }
+  
+  .btn-primary {
+    @apply bg-[#ff8906] text-[#fffffe] hover:bg-[#ff8906]/90;
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent border-2 border-[#ff8906] text-[#ff8906] hover:bg-[#ff8906]/10;
+  }
+  
+  .card {
+    @apply bg-[#1a1a2e] rounded-xl p-6 shadow-lg;
+  }
+}
+
+/* Background Animation */
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background: linear-gradient(
+    45deg,
+    rgba(255, 137, 6, 0.1),
+    rgba(26, 26, 46, 0.1),
+    rgba(255, 137, 6, 0.1)
+  );
+  background-size: 200% 200%;
+  animation: gradient 15s ease infinite;
+}
+
+/* Font Classes */
+.font-poppins {
+  font-family: var(--font-poppins);
+}
+
+.font-great-vibes {
+  font-family: var(--font-great-vibes);
+} 
