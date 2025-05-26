@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FaGraduationCap, FaBook, FaHistory } from 'react-icons/fa';
+import ConnectWallet from '../components/ConnectWallet';
 
 export default function Home() {
   const [isAboutVisible, setIsAboutVisible] = useState(false);
@@ -24,6 +25,7 @@ export default function Home() {
               >
                 About
               </button>
+              <ConnectWallet className="" />
               <Link href="/login" className="btn btn-primary">
                 Start Learning
               </Link>
