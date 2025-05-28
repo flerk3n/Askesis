@@ -9,9 +9,10 @@ declare global {
 
 interface ConnectWalletProps {
   className?: string;
+  onConnect?: () => void;
 }
 
-const ConnectWallet: React.FC<ConnectWalletProps> = ({ className }) => {
+const ConnectWallet: React.FC<ConnectWalletProps> = ({ className, onConnect }) => {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,6 +25,7 @@ const ConnectWallet: React.FC<ConnectWalletProps> = ({ className }) => {
     try {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       setWalletAddress(accounts[0]);
+      onConnect?.(); // Call the onConnect callback if provided
     } catch (err: any) {
       setError(err.message || 'Failed to connect wallet.');
     }

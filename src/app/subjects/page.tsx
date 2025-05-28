@@ -3,21 +3,56 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { FaGraduationCap, FaBook, FaHistory } from 'react-icons/fa';
+import { FaGraduationCap, FaBook, FaHistory, FaSignOutAlt } from 'react-icons/fa';
 import { auth } from '@/lib/firebase';
 
 export default function Subjects() {
   const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (!user) {
-        router.push('/login');
+    const checkAuth = () => {
+      // Check for wallet authentication
+      const storedAuthMethod = localStorage.getItem('authMethod');
+      if (storedAuthMethod === 'wallet') {
+        return; // User is authenticated with wallet
       }
-    });
 
-    return () => unsubscribe();
+      // Check for Firebase authentication
+      const unsubscribe = auth.onAuthStateChanged((user) => {
+        if (!user) {
+          router.push('/login');
+        }
+      });
+
+      return unsubscribe;
+    };
+
+    const unsubscribe = checkAuth();
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, [router]);
+
+  const handleLogout = async () => {
+    try {
+      // Check if user is authenticated with wallet
+      const storedAuthMethod = localStorage.getItem('authMethod');
+      if (storedAuthMethod === 'wallet') {
+        localStorage.removeItem('authMethod');
+        localStorage.removeItem('walletAddress');
+        router.push('/');
+        return;
+      }
+
+      // Firebase logout
+      await auth.signOut();
+      router.push('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
   const subjects = [
     {
@@ -52,6 +87,17 @@ export default function Subjects() {
 
   return (
     <div className="min-h-screen bg-[#0f0e17] py-12 px-4 sm:px-6 lg:px-8">
+      {/* Logout Button */}
+      <div className="absolute top-4 right-4">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 px-4 py-2 bg-[#ff8906] text-white rounded-lg hover:bg-[#ff8906]/90 transition-colors"
+        >
+          <FaSignOutAlt />
+          <span>Logout</span>
+        </button>
+      </div>
+
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

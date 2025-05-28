@@ -1,13 +1,76 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FaGraduationCap, FaBook, FaHistory } from 'react-icons/fa';
 import ConnectWallet from '../components/ConnectWallet';
 
 export default function Home() {
+  const router = useRouter();
   const [isAboutVisible, setIsAboutVisible] = useState(false);
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [authMethod, setAuthMethod] = useState<'wallet' | 'google' | null>(null);
+
+  // Listen for wallet connection status
+  useEffect(() => {
+    const checkWalletConnection = () => {
+      if (typeof window.ethereum !== 'undefined') {
+        window.ethereum.request({ method: 'eth_accounts' })
+          .then((accounts: string[]) => {
+            const connected = accounts.length > 0;
+            setIsWalletConnected(connected);
+            if (connected) {
+              setAuthMethod('wallet');
+              // Store wallet connection in localStorage
+              localStorage.setItem('authMethod', 'wallet');
+              localStorage.setItem('walletAddress', accounts[0]);
+            }
+          })
+          .catch(console.error);
+      }
+    };
+
+    // Check for existing wallet connection
+    const storedAuthMethod = localStorage.getItem('authMethod');
+    if (storedAuthMethod === 'wallet') {
+      checkWalletConnection();
+    }
+
+    // Listen for account changes
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', (accounts: string[]) => {
+        const connected = accounts.length > 0;
+        setIsWalletConnected(connected);
+        if (connected) {
+          setAuthMethod('wallet');
+          localStorage.setItem('authMethod', 'wallet');
+          localStorage.setItem('walletAddress', accounts[0]);
+        } else {
+          setAuthMethod(null);
+          localStorage.removeItem('authMethod');
+          localStorage.removeItem('walletAddress');
+        }
+      });
+    }
+
+    return () => {
+      if (window.ethereum) {
+        window.ethereum.removeListener('accountsChanged', () => {});
+      }
+    };
+  }, []);
+
+  const handleStartLearning = () => {
+    if (isWalletConnected || localStorage.getItem('authMethod') === 'wallet') {
+      // If wallet is connected or was previously connected, proceed with wallet authentication
+      router.push('/subjects');
+    } else {
+      // If no wallet, redirect to login page for Google authentication
+      router.push('/login');
+    }
+  };
 
   return (
     <div className="min-h-screen animate-gradient">
@@ -25,10 +88,16 @@ export default function Home() {
               >
                 About
               </button>
-              <ConnectWallet className="" />
-              <Link href="/login" className="btn btn-primary">
-                Start Learning
-              </Link>
+              <ConnectWallet 
+                className="" 
+                onConnect={() => setAuthMethod('wallet')}
+              />
+              <button
+                onClick={handleStartLearning}
+                className="btn btn-primary"
+              >
+                {isWalletConnected ? 'Start Learning' : 'Login with Google'}
+              </button>
             </div>
           </div>
         </div>

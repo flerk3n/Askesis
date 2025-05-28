@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FaGoogle } from 'react-icons/fa';
+import Image from 'next/image';
 import { auth, googleProvider } from '@/lib/firebase';
 import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 
@@ -52,9 +53,23 @@ export default function Login() {
           className="text-center"
         >
           <h1 className="text-4xl font-great-vibes mb-4">Welcome to Askesis</h1>
-          <p className="text-[#a7a9be] max-w-md">
+          <p className="text-[#a7a9be] max-w-md mb-8">
             Begin your journey of intellectual discovery with our AI teachers.
           </p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="relative w-[400px] h-[300px] mx-auto"
+          >
+            <Image
+              src="/images/education-illustration.svg"
+              alt="Education Illustration"
+              fill
+              className="object-contain"
+              priority
+            />
+          </motion.div>
         </motion.div>
       </div>
 
