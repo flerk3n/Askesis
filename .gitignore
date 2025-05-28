@@ -51,3 +51,4 @@ openapi-ts-error-*.log
 
 .env
 .env.local
+.cursor 
