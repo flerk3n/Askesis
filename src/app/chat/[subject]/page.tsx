@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase';
 import { subjects } from '@/constants/subjects';
+import { getGeminiResponse } from '@/lib/gemini';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -34,6 +35,16 @@ export default function ChatPage({ params }: { params: { subject: string } }) {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Add initial greeting when the component mounts
+  useEffect(() => {
+    if (subject && messages.length === 0) {
+      setMessages([{
+        role: 'assistant',
+        content: subject.greeting
+      }]);
+    }
+  }, [subject, messages.length]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
   };
@@ -56,19 +67,21 @@ export default function ChatPage({ params }: { params: { subject: string } }) {
     setIsLoading(true);
     
     try {
-      // Simulate AI response (replace with your AI integration)
-      setTimeout(() => {
-        const assistantMessage: Message = {
-          role: 'assistant',
-          content: `This is a simulated response for ${subject?.name || 'the subject'}. In a real implementation, this would be replaced with your AI integration.`,
-        };
-        
-        setMessages((prevMessages) => [...prevMessages, assistantMessage]);
-        setIsLoading(false);
-      }, 1000);
+      // Get response from Gemini API
+      const response = await getGeminiResponse(params.subject, [...messages, userMessage]);
+      
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: response,
+      };
+      
+      setMessages((prevMessages) => [...prevMessages, assistantMessage]);
     } catch (err) {
       console.error('Error sending message:', err);
-      setError('Failed to send message. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to send message. Please try again.');
+      // Remove the user message if there was an error
+      setMessages((prevMessages) => prevMessages.slice(0, -1));
+    } finally {
       setIsLoading(false);
     }
   };
