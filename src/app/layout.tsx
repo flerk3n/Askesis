@@ -1,22 +1,22 @@
 import type { Metadata } from 'next';
-import { Poppins, Great_Vibes } from 'next/font/google';
+import { Outfit, Poppins } from 'next/font/google';
 import './globals.css';
+
+const outfit = Outfit({
+  subsets: ['latin'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-outfit',
+});
 
 const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
   variable: '--font-poppins',
 });
 
-const greatVibes = Great_Vibes({
-  subsets: ['latin'],
-  weight: ['400'],
-  variable: '--font-great-vibes',
-});
-
 export const metadata: Metadata = {
-  title: 'Askesis - Enlighten Your Mind Through Socratic AI Inquiry',
-  description: 'Learn through guided questioning with AI teachers in Philosophy, Literature, and History.',
+  title: 'Askesis - Unlock the Future of Education',
+  description: 'Experience personalized AI-powered learning through the ancient art of Socratic questioning. Discover knowledge in Philosophy, Literature, and History like never before.',
 };
 
 export default function RootLayout({
@@ -26,7 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} ${greatVibes.variable} font-poppins bg-[#0f0e17] text-[#fffffe]`}>
+      <body className={`${outfit.variable} ${poppins.variable} font-outfit bg-black text-white`}>
         {children}
       </body>
     </html>

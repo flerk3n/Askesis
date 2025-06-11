@@ -13,6 +13,11 @@ module.exports = {
         background: "#f9fafb",
         foreground: "#111827",
       },
+      fontFamily: {
+        'outfit': ['Outfit', 'sans-serif'],
+        'coolvetica': ['Coolvetica', 'sans-serif'],
+        'poppins': ['var(--font-poppins)', 'sans-serif'],
+      },
     },
   },
   plugins: [],
